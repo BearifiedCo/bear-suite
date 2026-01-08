@@ -1,291 +1,309 @@
 # Bear Suite Social Media Launch Strategy
 
-## Twitter Announcements
+## Account Overview
 
-### Main Launch Thread (from @BearifiedCo)
+| Account | Purpose | Blue Check | Status |
+|---------|---------|------------|--------|
+| @BearifiedCo | Company - dev tools, livestreams, Bear Suite | Yes | Active, transitioning focus |
+| @BearoCash | iOS payments app | Needs activation | Created, dormant |
+| @BearoMoney | iOS payments app (alt) | Needs activation | Created, dormant |
 
-**Tweet 1 (Hook):**
+**The Transition:**
+- @BearifiedCo has been posting everything (iOS app included)
+- Now: iOS app posts move to @BearoCash/@BearoMoney
+- @BearifiedCo focuses on: Bear Suite, dev tools, livestreams, company building
+
+---
+
+## READY TO POST NOW
+
+### Thread 1: Bear Suite Launch (from @BearifiedCo)
+
+Copy-paste ready:
+
+**Tweet 1:**
 ```
+We build in the open.
+
 Introducing Bear Suite - AI-native tools for developers who live in the terminal.
 
-Two plugins. Zero context switching. Pure productivity.
+Two plugins. Zero context switching.
 
 bearifiedco.github.io/bear-suite
 ```
 
-**Tweet 2 (Bear Pair):**
+**Tweet 2:**
 ```
 Bear Pair: Real-time dual Claude orchestration.
 
-Run two Claude instances in synchronized tmux panes. One codes, one reviews. Both see everything.
+Two Claude instances. Synchronized tmux panes. One codes, one reviews.
 
-Like pair programming, but your partner never gets tired.
+Two perspectives are better than one.
 
-Works on macOS, Linux, and Windows (WSL).
+Works on macOS, Linux, Windows (WSL).
+
+github.com/BearifiedCo/bear-pair
 ```
 
-**Tweet 3 (Bear Call):**
+**Tweet 3:**
 ```
 Bear Call: Voice-first AI interaction.
 
-Call Claude from your terminal. Speak your intent, get code.
+Speak your intent. Get code.
 
-Perfect for:
-- Complex refactoring explanations
-- Architecture discussions
-- When typing feels like friction
+When typing feels like friction, just talk.
 
-Cross-platform. Node.js powered.
-```
-
-**Tweet 4 (CTA):**
-```
-Both plugins are open source and free.
-
-Star the repos:
-github.com/BearifiedCo/bear-pair
 github.com/BearifiedCo/bear-call
+```
 
-Built by AI, for developers who ship.
+**Tweet 4:**
+```
+Open source. Free. Built for collaboration.
+
+Two perspectives are better than one - in code AND in building.
+
+Star the repos. Fork them. Break them. Fix them. Ship with us.
+
+PRs welcome.
 ```
 
 ---
 
-### Alternative Single Tweets (for scheduling)
+### Thread 2: iOS App "First Steps" (from @BearoCash)
 
-**Developer Focus:**
+**Tweet 1:**
 ```
-Stop context-switching between coding and code review.
+Baby steps.
 
-Bear Pair runs two Claude instances side-by-side in tmux. Real-time pair programming with AI.
+We're transitioning from closed beta to open beta.
+
+This is @BearoCash taking its first independent steps - learning to walk.
+
+Follow along as we grow.
+```
+
+**Tweet 2:**
+```
+What we've built:
+- P2P crypto payments
+- As simple as Venmo
+- Your keys, your crypto
+
+What's next:
+- Open beta expansion
+- Community feedback
+- Shipping fast, learning faster
+```
+
+**Tweet 3:**
+```
+Built by @BearifiedCo.
+
+Now walking on our own.
+
+DMs open for beta access.
+```
+
+---
+
+### Single Tweets for @BearifiedCo (Developer Focus)
+
+**Livestream angle:**
+```
+Shipping live.
+
+Today we built Bear Suite - AI pair programming tools for the terminal.
+
+Two Claude instances. Real-time. Zero context switching.
+
+This is how we build. In the open.
 
 bearifiedco.github.io/bear-suite
 ```
 
-**Voice Focus:**
+**Collaboration angle:**
 ```
-Sometimes typing is friction.
+Two perspectives are better than one.
 
-Bear Call lets you talk to Claude in your terminal. Voice-first AI coding assistance.
+That's why we built Bear Pair - dual Claude orchestration for real-time pair programming.
 
-bearifiedco.github.io/bear-suite
-```
+It's also why we open source everything.
 
-**Open Source Focus:**
-```
-We build AI tools in the open.
+Fork it. Break it. Fix it. Ship with us.
 
-Bear Suite: Two Claude Code plugins for terminal-native developers.
-
-- Bear Pair (dual orchestration)
-- Bear Call (voice interaction)
-
-Free. Open source. Ship faster.
-
-bearifiedco.github.io/bear-suite
+github.com/BearifiedCo/bear-pair
 ```
 
-**Workflow Focus:**
+**Developer outreach:**
 ```
-The terminal is where work happens.
+Calling terminal-native developers:
 
-Bear Suite keeps you there:
+We built Bear Suite for you.
+
 - Bear Pair: AI pair programming
 - Bear Call: Voice-to-code
 
-No browser tabs. No context switches.
+Try it. Give feedback. Contribute.
+
+Open source. PRs welcome.
 
 bearifiedco.github.io/bear-suite
 ```
 
 ---
 
-## Automation Strategy
+## Buffer / Typefully Explanation
 
-### Tools to Leverage
+**Buffer** (buffer.com):
+- Social media scheduling tool
+- Write tweets now, schedule to post later
+- Analytics on engagement
+- Free tier: 3 channels, 10 scheduled posts
+- Paid: $6/mo per channel
 
-1. **Buffer / Hootsuite** - Schedule tweets across time zones
-   - Morning US Pacific: 9am PT
-   - Afternoon US Eastern: 2pm ET
-   - Evening EU: 6pm CET
+**Typefully** (typefully.com):
+- Twitter-focused writing + scheduling
+- Great for threads (previews exactly how it'll look)
+- Analytics and engagement tracking
+- Free tier available
+- Paid: $12.50/mo
 
-2. **Typefully** - Thread scheduling with analytics
-   - Great for the launch thread
-   - Shows engagement metrics
+**Recommendation:** Typefully for threads (better preview), Buffer for single tweets across platforms.
 
-3. **IFTTT / Zapier Automations:**
-   - GitHub star milestone → Auto-tweet celebration
-   - New release tag → Auto-announce update
-   - Blog post → Cross-post to Twitter
+**Or skip both:** Just post directly. Midweek, AI is hot, momentum is now.
 
-4. **GitHub Actions for Social:**
-   ```yaml
-   # .github/workflows/social-announce.yml
-   name: Social Announcement
-   on:
-     release:
-       types: [published]
-   jobs:
-     tweet:
-       runs-on: ubuntu-latest
-       steps:
-         - name: Tweet Release
-           uses: ethomson/send-tweet-action@v1
-           with:
-             status: "Bear Suite ${{ github.event.release.tag_name }} released! ${{ github.event.release.html_url }}"
-             consumer-key: ${{ secrets.TWITTER_CONSUMER_KEY }}
-             consumer-secret: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-             access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-             access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+---
+
+## Browser Agent Tasks (Comet/Atlas)
+
+These can be delegated to browser agents:
+
+### Hacker News
+- [ ] Create account (if needed)
+- [ ] Post "Show HN: Bear Suite - AI pair programming for the terminal"
+- [ ] Link: bearifiedco.github.io/bear-suite
+- [ ] Monitor comments, respond to feedback
+
+### Reddit
+- [ ] r/commandline - "Bear Suite: Dual Claude orchestration in tmux"
+- [ ] r/programming - "Open source AI pair programming tools"
+- [ ] r/LocalLLaMA - If relevant angle found
+- [ ] r/ClaudeAI - Direct relevance
+
+### Product Hunt (future)
+- [ ] Prepare launch page
+- [ ] Schedule for optimal day (Tuesday-Thursday)
+
+### Dev.to / Hashnode
+- [ ] Cross-post announcement as article
+- [ ] "How we built Bear Pair with Ralph Wiggum loops"
+
+---
+
+## @BearoCash / @BearoMoney Activation
+
+### Immediate Steps
+
+1. **Pick primary account** (@BearoCash recommended - cleaner)
+2. **Activate Blue Check** - $8/mo Twitter Blue
+3. **Post first tweet** - the "baby steps" thread above
+4. **Update bio:**
    ```
+   P2P crypto payments. Simple as Venmo. Your keys.
 
-### Engagement Schedule
+   Built by @BearifiedCo
 
-| Day | Time (PT) | Content Type |
-|-----|-----------|--------------|
-| Mon | 9am | Feature highlight |
-| Wed | 12pm | Use case / tutorial |
-| Fri | 3pm | Community / open source focus |
+   Closed beta → Open beta
+   ```
+5. **Pin the "baby steps" tweet**
 
----
+### Content Split Going Forward
 
-## iOS App Account Transition Plan
-
-### Current State
-- iOS payments app promoted on @BearifiedCo company account
-- No dedicated product account
-
-### Target State
-- @BearoApp (or similar) - dedicated product account
-- @BearifiedCo - company news, team updates, all products
-
-### Transition Steps
-
-1. **Create Product Account**
-   - Register @BearoApp or @BearoPayments
-   - Bio: "P2P crypto payments made simple. By @BearifiedCo"
-   - Link to App Store
-
-2. **Content Migration**
-   - Export iOS app-specific content
-   - Cross-post from company for 2 weeks
-   - Gradually shift primary posting to product account
-
-3. **Audience Building**
-   - Pin tweet: "Official account for Bearo iOS"
-   - @BearifiedCo retweets major announcements
-   - Cross-promote in bios
-
-4. **Timeline**
-   - Week 1: Create account, initial setup
-   - Week 2-3: Cross-posting period
-   - Week 4+: Product account primary, company amplifies
+| @BearoCash | @BearifiedCo |
+|------------|--------------|
+| App updates | Bear Suite / dev tools |
+| User testimonials | Livestream clips |
+| Beta announcements | What we're building |
+| Support / help | Company news |
+| Product roadmap | Open source projects |
 
 ---
 
-## @BearifiedCo Official Account Activation
+## Timing Analysis
 
-### Blue Check Verification
+**Why NOW is good:**
+- Midweek (Wed) - high engagement
+- AI hype cycle still strong
+- Ralph Wiggum technique getting attention
+- Claude Code plugins are new/novel
+- Markets active, tech Twitter engaged
 
-**Requirements:**
-1. Complete profile (bio, location, website, profile/header images)
-2. Active account (recent tweets, engagement)
-3. Twitter Blue subscription ($8/mo individual or $1000/mo organization)
-
-**Recommended: Organization Verification ($1000/mo)**
-- Gold checkmark
-- Affiliate badges for team/product accounts
-- Priority support
-- More credibility for a company
-
-**Action Items:**
-1. [ ] Update profile photo (company logo)
-2. [ ] Update header image (product showcase)
-3. [ ] Complete bio with website link
-4. [ ] Pin a welcome/intro tweet
-5. [ ] Subscribe to Twitter Blue or Verified Organizations
-6. [ ] Apply for verification
-
-### Initial Content Calendar (First 2 Weeks)
-
-**Week 1: Activation**
-| Day | Content |
-|-----|---------|
-| Day 1 | "We're active! Bearified builds AI-native tools..." |
-| Day 2 | Bear Suite launch thread |
-| Day 3 | Behind-the-scenes: how we built Bear Pair |
-| Day 4 | Retweet community feedback |
-| Day 5 | Bear Call demo video/gif |
-
-**Week 2: Engagement**
-| Day | Content |
-|-----|---------|
-| Day 1 | Ask: "What's your terminal workflow?" |
-| Day 2 | Share a tip using Bear Pair |
-| Day 3 | Highlight an open issue for contributors |
-| Day 4 | Team introduction |
-| Day 5 | Roadmap teaser |
-
-### Engagement Strategy
-
-1. **Reply to mentions within 2 hours** during business hours
-2. **Quote tweet** positive feedback with thanks
-3. **Follow relevant accounts:**
-   - Developer tools companies
-   - AI/ML builders
-   - Open source maintainers
-   - Tech journalists
-4. **Engage with hashtags:**
-   - #buildinpublic
-   - #opensource
-   - #devtools
-   - #AI
-5. **Cross-post to:**
-   - LinkedIn (professional angle)
-   - Reddit (r/programming, r/commandline)
-   - Hacker News (Show HN post)
+**Post sequence:**
+1. Bear Suite thread from @BearifiedCo (primary launch)
+2. Wait 2-4 hours for engagement
+3. iOS "baby steps" from @BearoCash (activate the account)
+4. Browser agents hit HN/Reddit in parallel
 
 ---
 
-## Quick Launch Checklist
+## Key Messaging
 
-### Pre-Launch
-- [x] Bear Suite homepage live
-- [x] GitHub repos public (bear-suite, bear-pair, bear-call)
-- [ ] @BearifiedCo profile updated
-- [ ] Blue check verification initiated
-- [ ] Buffer/Typefully account set up
-- [ ] Launch thread drafted in scheduler
+### Bear Suite
+- "Two perspectives are better than one"
+- "Built in the open"
+- "Zero context switching"
+- "Terminal-native"
+- "PRs welcome"
 
-### Launch Day
-- [ ] Post launch thread (morning PT)
-- [ ] Cross-post to LinkedIn
-- [ ] Submit to Hacker News (Show HN)
-- [ ] Post to r/commandline
-- [ ] Monitor mentions, reply to feedback
-- [ ] Retweet early positive responses
+### iOS App Transition
+- "Baby steps"
+- "Learning to walk"
+- "Closed beta → Open beta"
+- "Growing up"
 
-### Post-Launch (Week 1)
-- [ ] Thank early adopters publicly
-- [ ] Share any GitHub stars milestones
-- [ ] Post demo GIFs/videos
-- [ ] Engage with questions/issues
-- [ ] Set up GitHub → Twitter automation
+### Company (@BearifiedCo)
+- "We ship live"
+- "Building in the open"
+- "Collaboration > solo"
 
 ---
 
-## Hashtag Strategy
+## DO NOT Mention
 
-**Primary:**
-- #BearSuite
-- #ClaudeCode
+- BearCo token (keep quiet for now)
+- Specific financial details
+- Unannounced features
+- Internal metrics
 
-**Secondary:**
-- #AI
-- #DevTools
-- #OpenSource
-- #BuildInPublic
-- #Terminal
-- #DeveloperExperience
+---
 
-**Use 2-3 hashtags max per tweet for best engagement.**
+## Immediate Action Plan
+
+### Right Now (Human DRI - Alex)
+1. [ ] Post Bear Suite thread from @BearifiedCo
+2. [ ] Activate @BearoCash Twitter Blue ($8/mo)
+3. [ ] Post "baby steps" thread from @BearoCash
+
+### Browser Agent Tasks
+1. [ ] Comet/Atlas: Submit to Hacker News
+2. [ ] Comet/Atlas: Post to r/commandline
+3. [ ] Comet/Atlas: Post to r/programming
+
+### CTO (Me)
+1. [ ] Monitor for any technical questions
+2. [ ] Prepare responses for common questions
+3. [ ] Track engagement, adjust strategy
+
+---
+
+## Ralph Loop Consideration
+
+If we want to refine further before posting, a Ralph loop could:
+- Polish tweet copy
+- Generate more variations
+- Create response templates for FAQs
+- Build out full content calendar
+
+But momentum says: **ship now, iterate later.**
+
+The content above is ready to post. The timing is right. AI is hot. Let's go.
