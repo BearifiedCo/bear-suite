@@ -706,19 +706,26 @@
           Installation
         </h3>
 
+        <p style="color: var(--text-secondary); font-size: 11px; margin-bottom: 16px;">1. Clone the plugins</p>
         <div class="code-block">
-          <code><span class="code-comment"># Clone both plugins</span>
-git clone https://github.com/BearifiedCo/bear-pair.git ~/.claude/plugins/bear-pair
-git clone https://github.com/BearifiedCo/bear-call.git ~/.claude/plugins/bear-call
-
-<span class="code-comment"># Use with Claude Code</span>
-claude --plugin-dir ~/.claude/plugins/bear-pair --plugin-dir ~/.claude/plugins/bear-call</code>
+          <code>git clone https://github.com/BearifiedCo/bear-pair.git ~/.claude/plugins/bear-pair
+git clone https://github.com/BearifiedCo/bear-call.git ~/.claude/plugins/bear-call</code>
         </div>
 
+        <p style="color: var(--text-secondary); font-size: 11px; margin-bottom: 16px;">2. Use with Claude Code</p>
         <div class="code-block">
-          <code><span class="code-comment"># Or install individually</span>
-git clone https://github.com/BearifiedCo/bear-pair.git  <span class="code-comment"># Pair programming only</span>
-git clone https://github.com/BearifiedCo/bear-call.git  <span class="code-comment"># Voice escalation only</span></code>
+          <code>claude --plugin-dir ~/.claude/plugins/bear-pair --plugin-dir ~/.claude/plugins/bear-call</code>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 11px; margin-bottom: 16px;">Or install individually</p>
+        <div class="code-block">
+          <code><span class="code-comment"># Bear Pair only</span>
+git clone https://github.com/BearifiedCo/bear-pair.git ~/.claude/plugins/bear-pair
+claude --plugin-dir ~/.claude/plugins/bear-pair
+
+<span class="code-comment"># Bear Call only</span>
+git clone https://github.com/BearifiedCo/bear-call.git ~/.claude/plugins/bear-call
+claude --plugin-dir ~/.claude/plugins/bear-call</code>
         </div>
       </section>
 
