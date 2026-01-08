@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bear Suite - Intelligent AI Collaboration Toolkit</title>
+  <meta name="description" content="Bear Suite brings pair programming and voice escalation to AI-assisted development. Two perspectives are better than one.">
+
+  <!-- Theme Detection -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('bear-suite-theme');
+      const useLight = saved === 'light' ||
+        (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
+      if (useLight) {
+        document.documentElement.style.setProperty('--bg-primary', '#ffffff');
+        document.documentElement.style.setProperty('--bg-secondary', '#f5f5f5');
+        document.documentElement.style.setProperty('--bg-tertiary', '#ebebeb');
+        document.documentElement.style.setProperty('--text-primary', '#000000');
+        document.documentElement.style.setProperty('--text-secondary', '#666666');
+        document.documentElement.style.setProperty('--border', '#cccccc');
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+
+  <style>
+    :root {
+      /* Black/white penciled aesthetic */
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-tertiary: #141414;
+      --border: #333333;
+      --text-primary: #ffffff;
+      --text-secondary: #888888;
+      /* Bear colors */
+      --bear-orange: #ff6b35;
+      --bear-brown: #8b4513;
+      /* Status colors */
+      --green: #10a37f;
+      --yellow: #f5a623;
+      --red: #e53935;
+      --blue: #4285f4;
+      /* Focus ring */
+      --focus-ring: var(--text-primary);
+      --transition-duration: 0.3s;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 20px;
+      font-size: 13px;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Skip Link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--blue);
+      color: #fff;
+      padding: 8px 16px;
+      z-index: 10000;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 0 0 6px 0;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 0;
+      outline: 2px solid var(--text-primary);
+      outline-offset: 2px;
+    }
+
+    /* Screen Reader Only */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Focus */
+    :focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    /* Scanline Effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      );
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header h1 {
+      font-size: 14px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header h1 .logo {
+      font-size: 24px;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 6px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    /* ASCII Header */
+    .ascii-header {
+      font-family: inherit;
+      font-size: 10px;
+      line-height: 1.2;
+      color: var(--text-secondary);
+      white-space: pre;
+      margin-bottom: 24px;
+      opacity: 0.7;
+      text-align: center;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+      border: 1px dashed var(--border);
+      margin-bottom: 32px;
+    }
+
+    .hero-tagline {
+      font-size: 11px;
+      color: var(--bear-orange);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 16px;
+    }
+
+    .hero h2 {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+
+    .hero-subtitle {
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+
+    .hero-philosophy {
+      color: var(--text-secondary);
+      font-size: 12px;
+      border-left: 2px solid var(--bear-orange);
+      padding-left: 16px;
+      display: inline-block;
+      text-align: left;
+    }
+
+    /* Architecture Diagram */
+    .architecture {
+      margin-bottom: 32px;
+    }
+
+    .architecture-title {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .architecture-diagram {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 20px;
+      font-size: 11px;
+      line-height: 1.4;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* Plugin Cards */
+    .plugins {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 20px;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--bear-orange);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-badge {
+      font-size: 9px;
+      color: var(--bear-orange);
+      border: 1px solid var(--bear-orange);
+      padding: 2px 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .card-tagline {
+      color: var(--text-secondary);
+      font-style: italic;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-description {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-size: 12px;
+    }
+
+    .card-features {
+      list-style: none;
+      margin-bottom: 16px;
+    }
+
+    .card-features li {
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding: 4px 0;
+      border-bottom: 1px dotted var(--border);
+    }
+
+    .card-features li:last-child {
+      border-bottom: none;
+    }
+
+    .card-features li::before {
+      content: ">";
+      color: var(--bear-orange);
+      margin-right: 8px;
+    }
+
+    .card-commands {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .card-commands-title {
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .command-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .command-item {
+      font-size: 11px;
+      color: var(--green);
+      background: var(--bg-tertiary);
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+    }
+
+    .card-links {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .card-link {
+      font-size: 11px;
+      color: var(--blue);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .card-link:hover {
+      color: var(--text-primary);
+    }
+
+    /* Installation */
+    .installation {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .installation h3 {
+      font-size: 14px;
+      font-weight: 400;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-block {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    .code-block code {
+      color: var(--green);
+    }
+
+    .code-comment {
+      color: var(--text-secondary);
+    }
+
+    /* Workflow */
+    .workflow {
+      margin-bottom: 32px;
+    }
+
+    .workflow h3 {
+      font-size: 14px;
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+
+    .workflow-diagram {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 20px;
+      font-size: 11px;
+      line-height: 1.5;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* Requirements */
+    .requirements {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .requirement-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 16px;
+    }
+
+    .requirement-card h4 {
+      font-size: 12px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    .requirement-list {
+      list-style: none;
+    }
+
+    .requirement-list li {
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding: 4px 0;
+    }
+
+    .requirement-list li::before {
+      content: "-";
+      color: var(--border);
+      margin-right: 8px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
+
+    .footer-tagline {
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .footer-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-link:hover {
+      color: var(--text-primary);
+    }
+
+    .footer-credit {
+      color: var(--text-secondary);
+    }
+
+    .footer-credit a {
+      color: var(--bear-orange);
+      text-decoration: none;
+    }
+
+    /* Status indicators */
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Terminal line */
+    .terminal-line {
+      border-top: 1px dashed var(--border);
+      margin: 24px 0;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>
+        <span class="logo" role="img" aria-label="Bear">&#128059;</span>
+        bear-suite
+      </h1>
+      <div class="header-controls">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark/light theme">
+          [theme]
+        </button>
+      </div>
+    </header>
+
+    <!-- ASCII Art -->
+    <div class="ascii-header" aria-hidden="true">
+ ____                   ____        _ _
+| __ )  ___  __ _ _ __ / ___| _   _(_) |_ ___
+|  _ \ / _ \/ _` | '__| \___ \| | | | | __/ _ \
+| |_) |  __/ (_| | |    ___) | |_| | | ||  __/
+|____/ \___|\__,_|_|   |____/ \__,_|_|\__\___|
+    </div>
+
+    <main id="main">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-tagline">The Intelligent AI Collaboration Toolkit</div>
+        <h2>Two perspectives are better than one.</h2>
+        <p class="hero-subtitle">Real-time pair programming + voice escalation for Claude Code</p>
+        <div class="hero-philosophy">
+          Bear Suite combines dual Claude orchestration with<br>
+          human escalation, creating a tiered collaboration system<br>
+          where AI handles routine review and humans stay in the<br>
+          loop for critical decisions.
+        </div>
+      </section>
+
+      <!-- Architecture -->
+      <section class="architecture">
+        <div class="architecture-title">> system architecture</div>
+        <div class="architecture-diagram">
+                            BEAR SUITE
+ ________________________________________________________________
+|                                                                |
+|   +--------------+                      +--------------+       |
+|   |  Bear Pair   |<---- escalates ----->|  Bear Call   |       |
+|   |   (AI+AI)    |                      |  (AI->Human) |       |
+|   +--------------+                      +--------------+       |
+|          |                                     |               |
+|          | real-time review                    | voice calls   |
+|          v                                     v               |
+|   +----------------------------------------------------+       |
+|   |                   YOUR CODEBASE                    |       |
+|   +----------------------------------------------------+       |
+|________________________________________________________________|
+        </div>
+      </section>
+
+      <div class="terminal-line"></div>
+
+      <!-- Plugin Cards -->
+      <section class="plugins">
+        <!-- Bear Pair -->
+        <article class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <span role="img" aria-label="Bear">&#128059;</span>
+              Bear Pair
+            </h3>
+            <span class="card-badge">AI + AI</span>
+          </div>
+          <p class="card-tagline">"Two bears are smarter than one. Let's pair up!"</p>
+          <p class="card-description">
+            Real-time dual Claude orchestration for AI pair programming.
+            Two Claude instances running simultaneously: <strong>Driver</strong> writes code,
+            <strong>Navigator</strong> reviews in real-time. Errors are caught as they're written.
+          </p>
+          <ul class="card-features">
+            <li>Real-time code review as you work</li>
+            <li>Driver/Navigator pattern from pair programming</li>
+            <li>File-based IPC for seamless communication</li>
+            <li>tmux session orchestration</li>
+            <li>Escalation to humans via Bear Call</li>
+          </ul>
+          <div class="card-commands">
+            <div class="card-commands-title">Commands</div>
+            <div class="command-list">
+              <span class="command-item">/bear-pair</span>
+              <span class="command-item">/bear-status</span>
+              <span class="command-item">/bear-stop</span>
+              <span class="command-item">/bear-escalate</span>
+            </div>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/BearifiedCo/bear-pair" class="card-link" target="_blank">[GitHub]</a>
+            <a href="https://github.com/BearifiedCo/bear-pair#readme" class="card-link" target="_blank">[Documentation]</a>
+          </div>
+        </article>
+
+        <!-- Bear Call -->
+        <article class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <span role="img" aria-label="Phone">&#128222;</span>
+              Bear Call
+            </h3>
+            <span class="card-badge">AI -> Human</span>
+          </div>
+          <p class="card-tagline">"When the bear calls, you answer."</p>
+          <p class="card-description">
+            Voice escalation for AI agents. When Claude needs immediate human attention,
+            Bear Call makes it happen with a phone call using ElevenLabs AI voice
+            synthesis and Twilio telephony.
+          </p>
+          <ul class="card-features">
+            <li>ElevenLabs AI voice synthesis (premium quality)</li>
+            <li>Twilio telephony (production-grade)</li>
+            <li>4 urgency levels (critical/high/normal/low)</li>
+            <li>Business hours awareness</li>
+            <li>Automatic retry for critical calls</li>
+          </ul>
+          <div class="card-commands">
+            <div class="card-commands-title">Commands</div>
+            <div class="command-list">
+              <span class="command-item">/bear-call</span>
+              <span class="command-item">/bear-call-test</span>
+              <span class="command-item">/bear-call-history</span>
+              <span class="command-item">/bear-call-spawn-pair</span>
+            </div>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/BearifiedCo/bear-call" class="card-link" target="_blank">[GitHub]</a>
+            <a href="https://github.com/BearifiedCo/bear-call#readme" class="card-link" target="_blank">[Documentation]</a>
+          </div>
+        </article>
+      </section>
+
+      <div class="terminal-line"></div>
+
+      <!-- Installation -->
+      <section class="installation">
+        <h3>
+          <span class="status-dot"></span>
+          Installation
+        </h3>
+
+        <div class="code-block">
+          <code><span class="code-comment"># Clone both plugins</span>
+git clone https://github.com/BearifiedCo/bear-pair.git ~/.claude/plugins/bear-pair
+git clone https://github.com/BearifiedCo/bear-call.git ~/.claude/plugins/bear-call
+
+<span class="code-comment"># Use with Claude Code</span>
+claude --plugin-dir ~/.claude/plugins/bear-pair --plugin-dir ~/.claude/plugins/bear-call</code>
+        </div>
+
+        <div class="code-block">
+          <code><span class="code-comment"># Or install individually</span>
+git clone https://github.com/BearifiedCo/bear-pair.git  <span class="code-comment"># Pair programming only</span>
+git clone https://github.com/BearifiedCo/bear-call.git  <span class="code-comment"># Voice escalation only</span></code>
+        </div>
+      </section>
+
+      <!-- Workflow -->
+      <section class="workflow">
+        <h3>> integrated workflow</h3>
+        <div class="workflow-diagram">
+   1. Human starts Bear Pair session
+      --> /bear-pair "Implement payment flow"
+
+   2. Driver + Navigator work together
+      --> Driver codes, Navigator reviews in real-time
+
+   3. Navigator catches critical issue
+      --> Security vulnerability in auth logic
+
+   4. Navigator escalates via Bear Call
+      --> /bear-escalate "Security vuln" --urgency critical
+
+   5. Human's phone rings
+      --> "Bear calling: Security vulnerability detected..."
+
+   6. Human provides guidance
+      --> "Use the sanitization library, not manual regex"
+
+   7. Bears continue with human input
+      --> Driver implements fix, Navigator validates
+
+   8. Task completes with human-AI collaboration
+        </div>
+      </section>
+
+      <div class="terminal-line"></div>
+
+      <!-- Requirements -->
+      <section class="requirements">
+        <div class="requirement-card">
+          <h4>Bear Pair Requirements</h4>
+          <ul class="requirement-list">
+            <li>macOS (darwin)</li>
+            <li>tmux</li>
+            <li>Claude Code</li>
+          </ul>
+        </div>
+        <div class="requirement-card">
+          <h4>Bear Call Requirements</h4>
+          <ul class="requirement-list">
+            <li>macOS/Linux</li>
+            <li>Node.js</li>
+            <li>Claude Code</li>
+            <li>ElevenLabs account</li>
+            <li>Twilio account</li>
+          </ul>
+        </div>
+        <div class="requirement-card">
+          <h4>Ideal For</h4>
+          <ul class="requirement-list">
+            <li>Complex refactoring</li>
+            <li>Security-sensitive code</li>
+            <li>Production incidents</li>
+            <li>High-stakes changes</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer-tagline">"Two bears are smarter than one. Let's collaborate!"</p>
+      <div class="footer-links">
+        <a href="https://github.com/BearifiedCo/bear-suite" class="footer-link">[Bear Suite]</a>
+        <a href="https://github.com/BearifiedCo/bear-pair" class="footer-link">[Bear Pair]</a>
+        <a href="https://github.com/BearifiedCo/bear-call" class="footer-link">[Bear Call]</a>
+        <a href="https://github.com/BearifiedCo" class="footer-link">[GitHub]</a>
+      </div>
+      <p class="footer-credit">
+        Built by <a href="https://bearified.co">BearifiedCo</a> | MIT License
+      </p>
+      <p style="margin-top: 8px; font-size: 10px;">
+        Inspired by the <a href="https://ghuntley.com/ralph/" style="color: var(--text-secondary);">Ralph Wiggum Technique</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.dataset.theme;
+
+      if (currentTheme === 'light') {
+        // Switch to dark
+        html.style.setProperty('--bg-primary', '#000000');
+        html.style.setProperty('--bg-secondary', '#0a0a0a');
+        html.style.setProperty('--bg-tertiary', '#141414');
+        html.style.setProperty('--text-primary', '#ffffff');
+        html.style.setProperty('--text-secondary', '#888888');
+        html.style.setProperty('--border', '#333333');
+        delete html.dataset.theme;
+        localStorage.setItem('bear-suite-theme', 'dark');
+      } else {
+        // Switch to light
+        html.style.setProperty('--bg-primary', '#ffffff');
+        html.style.setProperty('--bg-secondary', '#f5f5f5');
+        html.style.setProperty('--bg-tertiary', '#ebebeb');
+        html.style.setProperty('--text-primary', '#000000');
+        html.style.setProperty('--text-secondary', '#666666');
+        html.style.setProperty('--border', '#cccccc');
+        html.dataset.theme = 'light';
+        localStorage.setItem('bear-suite-theme', 'light');
+      }
+    }
+  </script>
+</body>
+</html>
